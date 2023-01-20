@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using Zephry;
 
@@ -27,7 +26,7 @@ namespace Grandmark
             string? cookieValue = Request.Cookies[TokenDescriptor];
             if (cookieValue == null)
             {
-                throw new Exception("No Grandmarkcookie in request");
+                throw new Exception("No Grandmarkcookie in request - you must logon");
             }
             var dataProtectionProvider = DataProtectionProvider.Create(ApplicationDescriptor);
             var protector = dataProtectionProvider.CreateProtector(ApplicationKey);

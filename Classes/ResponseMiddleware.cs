@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http.Features;
-using System.Net;
-using Zephry;
-
-namespace Grandmark
+﻿namespace Grandmark
 {
     public class ResponseMiddleware
     {

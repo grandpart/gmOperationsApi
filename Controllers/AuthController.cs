@@ -32,12 +32,12 @@ namespace Grandmark
             catch (TransactionStatusException tx)
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), null);
+                return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), string.Empty);
             }
             catch (Exception ex)
             {
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), null);
+                return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), string.Empty);
             }
         }
 
