@@ -12,14 +12,14 @@ namespace Grandmark
         #region Read specific - GET
         [Route("organization/{orgKey}")]
         [HttpGet]
-        public string Load(int aOrgKey, [FromServices] Connection aConnection)
+        public string Load(int orgKey, [FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(Request);
             try
             {
                 var vOrganization = new Organization {
                     EntKey = vLogonToken.Entity,
-                    OrgKey = aOrgKey
+                    OrgKey = orgKey
                 };
                 UserBridge.Invoke(OrganizationBusiness.Load, vOrganization, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
