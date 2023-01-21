@@ -16,7 +16,7 @@
       <HintPath>..\bin\Debug\net7.0\gmCommonLib.dll</HintPath>
     </Reference>
     <Reference Include="gmOperationsLib">
-      <HintPath>..\bin\Release\net7.0\gmOperationsLib.dll</HintPath>
+      <HintPath>..\bin\Debug\net7.0\gmOperationsLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 
