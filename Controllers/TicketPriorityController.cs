@@ -41,6 +41,39 @@ namespace Grandmark
 
         #endregion
 
+        #region Get Specific - GET List
+
+        //[Route("ticketpriority")]
+        //[HttpGet]
+        //public string LoadList([FromServices] Connection aConnection)
+        //{
+        //    var vLogonToken = Utils.GetLogonToken(Request);
+
+        //    try
+        //    {
+        //        var vTicketPriority = new TicketPriorityProxy
+        //        {
+        //            EntKey = vLogonToken.Entity
+        //        };
+        //        UserBridge.Invoke(TicketPriorityProxyBusiness.Load, vTicketPriority, vLogonToken, aConnection);
+        //        Response.StatusCode = StatusCodes.Status200OK;
+        //        // NB, change this to a pure success message, no return
+        //        return Utils.StatusJson(null, vTicketPriority.SerializeToJson());
+        //    }
+        //    catch (TransactionStatusException tx)
+        //    {
+        //        Response.StatusCode = StatusCodes.Status401Unauthorized;
+        //        return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), string.Empty);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Response.StatusCode = StatusCodes.Status500InternalServerError;
+        //        return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), string.Empty);
+        //    }
+        //}
+
+        #endregion
+
         #region Create - POST
         [Route("ticketpriority")]
         [HttpPost]
