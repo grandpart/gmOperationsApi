@@ -39,6 +39,33 @@ namespace Grandmark
         }
         #endregion
 
+        #region Read list - GET 
+        [Route("organization")]
+        [HttpGet]
+        public string Load([FromServices] Connection aConnection)
+        {
+            var vLogonToken = Utils.GetLogonToken(Request);
+            try
+            {
+                var vOrganizationProxyList = new OrganizationProxyCollection();
+                UserBridge.Invoke(OrganizationProxyBusiness.Load, vOrganizationProxyList, vLogonToken, aConnection);
+                Response.StatusCode = StatusCodes.Status200OK;
+                // NB, change this to a pure success message, no return
+                return Utils.StatusJson(null, vOrganizationProxyList.SerializeToJson());
+            }
+            catch (TransactionStatusException tx)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), string.Empty);
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = StatusCodes.Status500InternalServerError;
+                return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), string.Empty);
+            }
+        }
+        #endregion
+
         #region Create - POST
         [Route("organization")]
         [HttpPost]
