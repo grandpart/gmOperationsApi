@@ -50,11 +50,11 @@ namespace Grandmark
             var vLogonToken = Utils.GetLogonToken(Request);
             try
             {
-                var vTicketPriorityProxyList = new TicketPriorityProxyCollection();
-                UserBridge.Invoke(TicketPriorityProxyBusiness.Load, vTicketPriorityProxyList, vLogonToken, aConnection);
+                var vTicketPriorityList = new List<TicketPriority>();
+                UserBridge.Invoke(TicketPriorityBusiness.LoadList, vTicketPriorityList, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, vTicketPriorityProxyList.SerializeToJson());
+                return Utils.StatusJson(null, vTicketPriorityList.SerializeToJson());
             }
             catch (TransactionStatusException tx)
             {
