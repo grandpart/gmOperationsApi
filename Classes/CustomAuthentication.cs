@@ -33,9 +33,9 @@ namespace Grandmark
             }
 
             // Authenticate Cookie
+            var vLogonToken = Utils.GetLogonToken(Request.HttpContext);
             try
             {
-                var vLogonToken = Utils.GetLogonToken(Request);
                 // Do user auth here
                 return Task.FromResult(AuthenticateResult.NoResult());
             }

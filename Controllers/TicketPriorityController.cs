@@ -13,7 +13,7 @@ namespace Grandmark
         [HttpGet]
         public string Load(int tprKey, [FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(Request);
+            var vLogonToken = Utils.GetLogonToken(HttpContext);
 
             try
             {
@@ -46,7 +46,7 @@ namespace Grandmark
         [HttpPost]
         public string Create([FromBody] TicketPriority aTicketPriority, [FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(Request);
+            var vLogonToken = Utils.GetLogonToken(HttpContext);
             aTicketPriority.EntKey = vLogonToken.Entity;
             try
             {
@@ -73,7 +73,7 @@ namespace Grandmark
         [HttpPut]
         public string Update(int tprKey, [FromBody] TicketPriority aTicketPriority, [FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(Request);
+            var vLogonToken = Utils.GetLogonToken(HttpContext);
             aTicketPriority.EntKey = vLogonToken.Entity;
             aTicketPriority.TprKey = tprKey;
             try
@@ -101,7 +101,7 @@ namespace Grandmark
         [HttpDelete]
         public string Delete(int tprKey, [FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(Request);
+            var vLogonToken = Utils.GetLogonToken(HttpContext);
             TicketPriorityKey vTicketPriorityKey = new();
             vTicketPriorityKey.EntKey = vLogonToken.Entity;
             vTicketPriorityKey.TprKey = tprKey;

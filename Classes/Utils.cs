@@ -1,6 +1,8 @@
-﻿using System.Text;
+﻿using System.Net;
+using System.Text;
 using Microsoft.AspNetCore.DataProtection;
 using Zephry;
+using static System.Net.WebRequestMethods;
 
 namespace Grandmark
 {
@@ -15,18 +17,24 @@ namespace Grandmark
             var dataProtectionProvider = DataProtectionProvider.Create(ApplicationDescriptor);
             var protector = dataProtectionProvider.CreateProtector(ApplicationKey);
             var protectedText = protector.Protect(aLogonToken.SerializeToJson());
+
             var cookieOptions = new CookieOptions();
+            cookieOptions.Secure = true;
+            cookieOptions.HttpOnly = true;
+            cookieOptions.SameSite = SameSiteMode.None;            
             cookieOptions.Expires = DateTime.Now.AddDays(30);
             cookieOptions.Path = "/";
-            Response.Cookies.Append(TokenDescriptor, protectedText);
+            cookieOptions.IsEssential = true;
+            Response.Cookies.Append(TokenDescriptor, protectedText, cookieOptions);
+
         }
 
-        public static LogonToken GetLogonToken(HttpRequest Request)
+        public static LogonToken GetLogonToken(HttpContext aHttpContext)
         {
-            string? cookieValue = Request.Cookies[TokenDescriptor];
+            string? cookieValue = aHttpContext.Request.Cookies[TokenDescriptor];
             if (cookieValue == null)
             {
-                throw new Exception("No Grandmarkcookie in request - you must logon");
+                throw new TransactionStatusException(TransactionResult.Access, "No cookie found, please logon");
             }
             var dataProtectionProvider = DataProtectionProvider.Create(ApplicationDescriptor);
             var protector = dataProtectionProvider.CreateProtector(ApplicationKey);

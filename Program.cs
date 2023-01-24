@@ -1,4 +1,4 @@
-using Grandmark;
+using Microsoft.Extensions.Configuration;
 using Zephry;
 
 namespace Grandmark;
@@ -19,11 +19,20 @@ internal class Program
             DbUser = "zephman",
             DbPassword = "1Password!"
         });
-        builder.Services.AddAuthentication(options => options.DefaultScheme = "GrandmarkSchemeOptions")
-            .AddScheme<GrandmarkSchemeOptions, GrandmarkAuthenticationHandler>("GrandmarkSchemeOptions", options => { });
-
+        //builder.Services.AddAuthentication(options => options.DefaultScheme = "GrandmarkSchemeOptions")
+        //    .AddScheme<GrandmarkSchemeOptions, GrandmarkAuthenticationHandler>("GrandmarkSchemeOptions", options => { });
+        
         var app = builder.Build();
+        app.UseCors(builder =>
+        {
+            builder
+              .SetIsOriginAllowed(origin => true)
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+        });
         app.UseHttpsRedirection();
+        //app.UseRequestMiddleware(); // This is custom
         app.UseResponseMiddleware(); // This is custom
         app.MapControllers();
 
