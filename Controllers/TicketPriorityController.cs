@@ -50,7 +50,7 @@ namespace Grandmark
             var vLogonToken = Utils.GetLogonToken(HttpContext);
             try
             {
-                var vTicketPriorityList = new List<TicketPriority>();
+                var vTicketPriorityList = new TicketPriorityCollection();
                 UserBridge.Invoke(TicketPriorityBusiness.LoadList, vTicketPriorityList, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
