@@ -1,31 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Grandmark;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Zephry;
 
-namespace Grandmark
+namespace gmOperationsApi.Controllers
 {
+    
     [ApiController]
-    public class TicketPriorityController : Controller
+    public class CurrencyController : ControllerBase
     {
-
         #region Get Specific - GET
 
-        [Route("ticketpriority/{tprKey}")]
+        [Route("currency/{curKey}")]
         [HttpGet]
-        public string Load(int tprKey, [FromServices] Connection aConnection)
+        public string Load(int curKey, [FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(HttpContext);
+            var vLogonToken = Utils.GetLogonToken(Request);
 
             try
             {
-                var vTicketPriority = new TicketPriority
+                var vCurrency = new Currency
                 {
                     EntKey = vLogonToken.Entity,
-                    TprKey = tprKey
+                    CurKey = curKey
                 };
-                UserBridge.Invoke(TicketPriorityBusiness.Load, vTicketPriority, vLogonToken, aConnection);
+                UserBridge.Invoke(CurrencyBusiness.Load, vCurrency, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, vTicketPriority.SerializeToJson());
+                return Utils.StatusJson(null, vCurrency.SerializeToJson());
             }
             catch (TransactionStatusException tx)
             {
@@ -43,18 +45,18 @@ namespace Grandmark
 
         #region Read List - GET
 
-        [Route("ticketpriority")]
+        [Route("currency")]
         [HttpGet]
         public string LoadList([FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(Request);
             try
             {
-                var vTicketPriorityList = new List<TicketPriority>();
-                UserBridge.Invoke(TicketPriorityBusiness.LoadList, vTicketPriorityList, vLogonToken, aConnection);
+                var vCurrencyList = new List<Currency>();
+                UserBridge.Invoke(CurrencyBusiness.LoadList, vCurrencyList, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, vTicketPriorityList.SerializeToJson());
+                return Utils.StatusJson(null, vCurrencyList.SerializeToJson());
             }
             catch (TransactionStatusException tx)
             {
@@ -71,18 +73,18 @@ namespace Grandmark
         #endregion
 
         #region Create - POST
-        [Route("ticketpriority")]
+        [Route("currency")]
         [HttpPost]
-        public string Create([FromBody] TicketPriority aTicketPriority, [FromServices] Connection aConnection)
+        public string Create([FromBody] Currency aCurrency, [FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(HttpContext);
-            aTicketPriority.EntKey = vLogonToken.Entity;
+            var vLogonToken = Utils.GetLogonToken(Request);
+            aCurrency.EntKey = vLogonToken.Entity;
             try
             {
-                UserBridge.Invoke(TicketPriorityBusiness.Insert, aTicketPriority, vLogonToken, aConnection);
+                UserBridge.Invoke(CurrencyBusiness.Insert, aCurrency, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, aTicketPriority.SerializeToJson());
+                return Utils.StatusJson(null, aCurrency.SerializeToJson());
             }
             catch (TransactionStatusException tx)
             {
@@ -98,19 +100,19 @@ namespace Grandmark
         #endregion
 
         #region Update - PUT
-        [Route("ticketpriority/{tprKey}")]
+        [Route("currency/{curKey}")]
         [HttpPut]
-        public string Update(int tprKey, [FromBody] TicketPriority aTicketPriority, [FromServices] Connection aConnection)
+        public string Update(int curKey, [FromBody] Currency aCurrency, [FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(HttpContext);
-            aTicketPriority.EntKey = vLogonToken.Entity;
-            aTicketPriority.TprKey = tprKey;
+            var vLogonToken = Utils.GetLogonToken(Request);
+            aCurrency.EntKey = vLogonToken.Entity;
+            aCurrency.CurKey = curKey;
             try
             {
-                UserBridge.Invoke(TicketPriorityBusiness.Update, aTicketPriority, vLogonToken, aConnection);
+                UserBridge.Invoke(CurrencyBusiness.Update, aCurrency, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, aTicketPriority.SerializeToJson());
+                return Utils.StatusJson(null, aCurrency.SerializeToJson());
             }
             catch (TransactionStatusException tx)
             {
@@ -126,20 +128,20 @@ namespace Grandmark
         #endregion
 
         #region Delete - DELETE
-        [Route("ticketpriority/{tprKey}")]
+        [Route("currency/{curKey}")]
         [HttpDelete]
-        public string Delete(int tprKey, [FromServices] Connection aConnection)
+        public string Delete(int curKey, [FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(HttpContext);
-            TicketPriorityKey vTicketPriorityKey = new();
-            vTicketPriorityKey.EntKey = vLogonToken.Entity;
-            vTicketPriorityKey.TprKey = tprKey;
+            var vLogonToken = Utils.GetLogonToken(Request);
+            Currency vCurrencyKey = new();
+            vCurrencyKey.EntKey = vLogonToken.Entity;
+            vCurrencyKey.CurKey = curKey;
             try
             {
-                UserBridge.Invoke(TicketPriorityBusiness.Delete, vTicketPriorityKey, vLogonToken, aConnection);
+                UserBridge.Invoke(CurrencyBusiness.Delete, vCurrencyKey, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, vTicketPriorityKey.SerializeToJson());
+                return Utils.StatusJson(null, vCurrencyKey.SerializeToJson());
             }
             catch (TransactionStatusException tx)
             {
