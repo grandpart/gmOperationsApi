@@ -47,7 +47,7 @@ namespace Grandmark
         [HttpGet]
         public string LoadList([FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(Request);
+            var vLogonToken = Utils.GetLogonToken(HttpContext);
             try
             {
                 var vTicketPriorityList = new List<TicketPriority>();

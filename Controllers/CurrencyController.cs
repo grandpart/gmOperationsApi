@@ -15,7 +15,7 @@ namespace gmOperationsApi.Controllers
         [HttpGet]
         public string Load(int curKey, [FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(Request);
+            var vLogonToken = Utils.GetLogonToken(HttpContext);
 
             try
             {
@@ -49,7 +49,7 @@ namespace gmOperationsApi.Controllers
         [HttpGet]
         public string LoadList([FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(Request);
+            var vLogonToken = Utils.GetLogonToken(HttpContext);
             try
             {
                 var vCurrencyList = new List<Currency>();
@@ -77,7 +77,7 @@ namespace gmOperationsApi.Controllers
         [HttpPost]
         public string Create([FromBody] Currency aCurrency, [FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(Request);
+            var vLogonToken = Utils.GetLogonToken(HttpContext);
             aCurrency.EntKey = vLogonToken.Entity;
             try
             {
@@ -104,7 +104,7 @@ namespace gmOperationsApi.Controllers
         [HttpPut]
         public string Update(int curKey, [FromBody] Currency aCurrency, [FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(Request);
+            var vLogonToken = Utils.GetLogonToken(HttpContext);
             aCurrency.EntKey = vLogonToken.Entity;
             aCurrency.CurKey = curKey;
             try
@@ -132,7 +132,7 @@ namespace gmOperationsApi.Controllers
         [HttpDelete]
         public string Delete(int curKey, [FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(Request);
+            var vLogonToken = Utils.GetLogonToken(HttpContext);
             Currency vCurrencyKey = new();
             vCurrencyKey.EntKey = vLogonToken.Entity;
             vCurrencyKey.CurKey = curKey;
