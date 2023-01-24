@@ -49,10 +49,11 @@ namespace gmOperationsApi.Controllers
         [HttpGet]
         public string LoadList([FromServices] Connection aConnection)
         {
-            var vLogonToken = Utils.GetLogonToken(HttpContext);
+            
             try
             {
-                var vCurrencyList = new List<Currency>();
+                var vLogonToken = Utils.GetLogonToken(HttpContext);
+                var vCurrencyList = new CurrencyCollection();
                 UserBridge.Invoke(CurrencyBusiness.LoadList, vCurrencyList, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
