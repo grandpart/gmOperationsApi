@@ -1,0 +1,38 @@
+﻿CREATE TABLE Currency
+(
+	Ent_Key INT NOT NULL,
+	Cur_Key INT NOT NULL IDENTITY(1,1),
+	Cur_Code VARCHAR(5) NOT NULL,
+	Cur_Prefix NVARCHAR(1) NOT NULL,
+	Cur_Name NVARCHAR(50) NOT NULL
+)
+GO
+ALTER TABLE Currency ADD CONSTRAINT pk_Currency PRIMARY KEY (Ent_key,Cur_Key)
+GO
+
+----------------------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE Branch
+(
+	Ent_Key int NOT NULL,
+	Brh_Key INT IDENTITY(1,1) NOT NULL,
+	Brh_Name NVARCHAR(255) NOT NULL,
+	Brh_Code NVARCHAR(10) NOT NULL,
+)
+GO
+ALTER TABLE Branch ADD CONSTRAINT pk_Branch PRIMARY KEY (Ent_Key, Brh_Key)
+GO
+
+----------------------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE Warehouse
+(
+	Ent_Key INT NOT NULL,
+	Whs_Key INT IDENTITY(1,1) NOT NULL,
+	Whs_Name NVARCHAR(510) NOT NULL,
+	Whs_Code NVARCHAR(10) NOT NULL,
+	Whs_IsTradingWarehouse bit NOT NULL,
+)
+GO
+ALTER TABLE Warehouse ADD CONSTRAINT pk_Warehouse PRIMARY KEY (Ent_Key, Whs_Key)
+GO
