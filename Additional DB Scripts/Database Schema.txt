@@ -1,0 +1,462 @@
+﻿USE [master]
+GO
+/****** Object:  Database [torq]    Script Date: 19/01/2023 12:15:22 ******/
+CREATE DATABASE [torq]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'torq', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\torq.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'torq_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\torq_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+GO
+ALTER DATABASE [torq] SET COMPATIBILITY_LEVEL = 140
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [torq].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [torq] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [torq] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [torq] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [torq] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [torq] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [torq] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [torq] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [torq] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [torq] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [torq] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [torq] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [torq] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [torq] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [torq] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [torq] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [torq] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [torq] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [torq] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [torq] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [torq] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [torq] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [torq] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [torq] SET RECOVERY FULL 
+GO
+ALTER DATABASE [torq] SET  MULTI_USER 
+GO
+ALTER DATABASE [torq] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [torq] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [torq] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [torq] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [torq] SET DELAYED_DURABILITY = DISABLED 
+GO
+EXEC sys.sp_db_vardecimal_storage_format N'torq', N'ON'
+GO
+ALTER DATABASE [torq] SET QUERY_STORE = OFF
+GO
+USE [torq]
+GO
+/****** Object:  User [zephman]    Script Date: 19/01/2023 12:15:22 ******/
+CREATE USER [zephman] FOR LOGIN [zephman] WITH DEFAULT_SCHEMA=[dbo]
+GO
+ALTER ROLE [db_datareader] ADD MEMBER [zephman]
+GO
+ALTER ROLE [db_datawriter] ADD MEMBER [zephman]
+GO
+/****** Object:  Table [dbo].[Entity]    Script Date: 19/01/2023 12:15:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Entity](
+	[Ent_Key] [int] IDENTITY(1,1) NOT NULL,
+	[Ent_DateRegistered] [datetime] NOT NULL,
+	[Ent_TrialExpires] [datetime] NOT NULL,
+	[Ent_Name] [nvarchar](255) NOT NULL,
+	[Ent_Status] [int] NOT NULL,
+	[Ent_Health] [float] NOT NULL,
+	[Ent_Url] [nvarchar](1024) NULL,
+	[Ent_Identifier] [nvarchar](255) NULL,
+	[Ent_Logo] [varbinary](max) NULL,
+	[Ent_FinMonth] [int] NOT NULL,
+	[Ent_FinDayType] [int] NOT NULL,
+	[Ent_FinDay] [int] NOT NULL,
+	[Ent_Longitude] [float] NULL,
+	[Ent_Latitude] [float] NULL,
+ CONSTRAINT [PK_Entity] PRIMARY KEY CLUSTERED 
+(
+	[Ent_Key] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Organization]    Script Date: 19/01/2023 12:15:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Organization](
+	[Ent_Key] [int] NOT NULL,
+	[Org_Key] [int] NOT NULL,
+	[Ent_KeyParent] [int] NULL,
+	[Org_KeyParent] [int] NULL,
+	[Org_Name] [nvarchar](255) NOT NULL,
+ CONSTRAINT [PK_Organization] PRIMARY KEY CLUSTERED 
+(
+	[Ent_Key] ASC,
+	[Org_Key] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Register]    Script Date: 19/01/2023 12:15:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Register](
+	[REG_Key] [int] IDENTITY(1,1) NOT NULL,
+	[REG_Token] [uniqueidentifier] NOT NULL,
+	[REG_CompanyName] [nvarchar](255) NOT NULL,
+	[REG_CompanyNumber] [nvarchar](255) NULL,
+	[REG_UserID] [nvarchar](50) NOT NULL,
+	[REG_Password] [nvarchar](50) NOT NULL,
+	[REG_Email] [nvarchar](255) NOT NULL,
+	[REG_Firstname] [nvarchar](255) NOT NULL,
+	[REG_Surname] [nvarchar](255) NOT NULL,
+	[REG_DateRequested] [datetime] NOT NULL,
+	[REG_Status] [int] NOT NULL,
+	[REG_DateActioned] [datetime] NOT NULL,
+	[REG_EntKey] [int] NOT NULL,
+	[REG_UsrKey] [int] NOT NULL,
+ CONSTRAINT [PK_Register] PRIMARY KEY CLUSTERED 
+(
+	[REG_Key] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[SysUser]    Script Date: 19/01/2023 12:15:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SysUser](
+	[Ent_Key] [int] NOT NULL,
+	[Usr_Key] [int] IDENTITY(1,1) NOT NULL,
+	[Usr_ParentEnt] [int] NULL,
+	[Usr_ParentKey] [int] NULL,
+	[Usr_UserID] [nvarchar](255) NOT NULL,
+	[Usr_Password] [nvarchar](255) NOT NULL,
+	[Usr_Admin] [char](1) NOT NULL,
+	[Usr_AutoAuthorize] [char](1) NOT NULL,
+	[Usr_CanAuthorize] [char](1) NOT NULL,
+	[Usr_Name] [nvarchar](255) NOT NULL,
+	[Usr_Surname] [nvarchar](255) NOT NULL,
+	[Usr_Email] [varchar](255) NOT NULL,
+	[Usr_Identifier] [nvarchar](50) NULL,
+	[Usr_Mobile] [varchar](50) NULL,
+	[Usr_Phone] [varchar](50) NULL,
+	[Usr_Extension] [varchar](50) NULL,
+	[Usr_Fax] [varchar](50) NULL,
+	[Usr_Avatar] [varbinary](max) NULL,
+	[Usr_Status] [int] NOT NULL,
+	[Usr_StatusDate] [datetime] NOT NULL,
+	[Usr_Token] [uniqueidentifier] NULL,
+	[Usr_TokenDate] [datetime] NULL,
+ CONSTRAINT [PK_SysUser] PRIMARY KEY CLUSTERED 
+(
+	[Ent_Key] ASC,
+	[Usr_Key] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Ticket]    Script Date: 19/01/2023 12:15:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Ticket](
+	[Ent_Key] [int] NOT NULL,
+	[Tck_Key] [int] IDENTITY(1,1) NOT NULL,
+	[Usr_KeySource] [int] NOT NULL,
+	[Usr_KeyTarget] [int] NOT NULL,
+	[Org_Key] [int] NOT NULL,
+	[Ttp_Key] [int] NOT NULL,
+	[Tpr_Key] [int] NOT NULL,
+	[Tst_Status] [int] NOT NULL,
+	[Tck_Description] [nvarchar](1024) NOT NULL,
+	[Tck_Date] [datetime] NOT NULL,
+	[Tck_HoursRequired] [int] NOT NULL,
+ CONSTRAINT [PK_Ticket] PRIMARY KEY CLUSTERED 
+(
+	[Ent_Key] ASC,
+	[Tck_Key] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TicketComment]    Script Date: 19/01/2023 12:15:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TicketComment](
+	[Ent_Key] [int] NOT NULL,
+	[Tck_Key] [int] NOT NULL,
+	[Tcm_Key] [int] IDENTITY(1,1) NOT NULL,
+	[Usr_Key] [int] NOT NULL,
+	[Tcm_Date] [datetime] NOT NULL,
+	[Tcm_Text] [nvarchar](255) NOT NULL,
+ CONSTRAINT [PK_TicketComment] PRIMARY KEY CLUSTERED 
+(
+	[Ent_Key] ASC,
+	[Tck_Key] ASC,
+	[Tcm_Key] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TicketFile]    Script Date: 19/01/2023 12:15:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TicketFile](
+	[Ent_Key] [int] NOT NULL,
+	[Tck_Key] [int] NOT NULL,
+	[Tfl_Key] [int] IDENTITY(1,1) NOT NULL,
+	[Tfl_Description] [nvarchar](255) NOT NULL,
+	[Tfl_Path] [nvarchar](255) NOT NULL,
+	[Tfl_Name] [nvarchar](1024) NOT NULL,
+	[Tfl_Extension] [nvarchar](45) NOT NULL,
+	[Tfl_FileSizeBytes] [int] NOT NULL,
+ CONSTRAINT [PK_TicketFile] PRIMARY KEY CLUSTERED 
+(
+	[Ent_Key] ASC,
+	[Tck_Key] ASC,
+	[Tfl_Key] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TicketPriority]    Script Date: 19/01/2023 12:15:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TicketPriority](
+	[EntKey] [int] NOT NULL,
+	[TprKey] [int] IDENTITY(1,1) NOT NULL,
+	[TprName] [nvarchar](255) NOT NULL,
+	[TprPriority] [int] NOT NULL,
+	[TprClass] [nvarchar](255) NULL,
+ CONSTRAINT [PK_TicketPriority] PRIMARY KEY CLUSTERED 
+(
+	[EntKey] ASC,
+	[TprKey] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TicketStatus]    Script Date: 19/01/2023 12:15:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TicketStatus](
+	[Ent_Key] [int] NOT NULL,
+	[Tst_Key] [int] IDENTITY(1,1) NOT NULL,
+	[Tst_Name] [nchar](10) NOT NULL,
+ CONSTRAINT [PK_TicketStatus] PRIMARY KEY CLUSTERED 
+(
+	[Ent_Key] ASC,
+	[Tst_Key] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TicketType]    Script Date: 19/01/2023 12:15:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TicketType](
+	[Ent_Key] [int] NOT NULL,
+	[Ttp_Key] [int] IDENTITY(1,1) NOT NULL,
+	[Ttp_Name] [int] NULL,
+ CONSTRAINT [PK_TicketType] PRIMARY KEY CLUSTERED 
+(
+	[Ent_Key] ASC,
+	[Ttp_Key] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [IX_UserId]    Script Date: 19/01/2023 12:15:22 ******/
+CREATE UNIQUE NONCLUSTERED INDEX [IX_UserId] ON [dbo].[SysUser]
+(
+	[Usr_UserID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[SysUser] ADD  CONSTRAINT [DF_SysUser_Admin]  DEFAULT ('N') FOR [Usr_Admin]
+GO
+ALTER TABLE [dbo].[Organization]  WITH CHECK ADD  CONSTRAINT [FK_Organization_Entity] FOREIGN KEY([Ent_Key])
+REFERENCES [dbo].[Entity] ([Ent_Key])
+GO
+ALTER TABLE [dbo].[Organization] CHECK CONSTRAINT [FK_Organization_Entity]
+GO
+ALTER TABLE [dbo].[Organization]  WITH CHECK ADD  CONSTRAINT [FK_Organization_Parent] FOREIGN KEY([Ent_KeyParent], [Org_KeyParent])
+REFERENCES [dbo].[Organization] ([Ent_Key], [Org_Key])
+GO
+ALTER TABLE [dbo].[Organization] CHECK CONSTRAINT [FK_Organization_Parent]
+GO
+ALTER TABLE [dbo].[SysUser]  WITH CHECK ADD  CONSTRAINT [FK_SysUser_Entity] FOREIGN KEY([Ent_Key])
+REFERENCES [dbo].[Entity] ([Ent_Key])
+GO
+ALTER TABLE [dbo].[SysUser] CHECK CONSTRAINT [FK_SysUser_Entity]
+GO
+ALTER TABLE [dbo].[SysUser]  WITH CHECK ADD  CONSTRAINT [FK_SysUser_Parent] FOREIGN KEY([Ent_Key], [Usr_Key])
+REFERENCES [dbo].[SysUser] ([Ent_Key], [Usr_Key])
+GO
+ALTER TABLE [dbo].[SysUser] CHECK CONSTRAINT [FK_SysUser_Parent]
+GO
+ALTER TABLE [dbo].[Ticket]  WITH CHECK ADD  CONSTRAINT [FK_Ticket_Entity] FOREIGN KEY([Ent_Key])
+REFERENCES [dbo].[Entity] ([Ent_Key])
+GO
+ALTER TABLE [dbo].[Ticket] CHECK CONSTRAINT [FK_Ticket_Entity]
+GO
+ALTER TABLE [dbo].[Ticket]  WITH CHECK ADD  CONSTRAINT [FK_Ticket_Organization] FOREIGN KEY([Ent_Key], [Org_Key])
+REFERENCES [dbo].[Organization] ([Ent_Key], [Org_Key])
+GO
+ALTER TABLE [dbo].[Ticket] CHECK CONSTRAINT [FK_Ticket_Organization]
+GO
+ALTER TABLE [dbo].[Ticket]  WITH CHECK ADD  CONSTRAINT [FK_Ticket_TicketPriority] FOREIGN KEY([Ent_Key], [Tpr_Key])
+REFERENCES [dbo].[TicketPriority] ([EntKey], [TprKey])
+GO
+ALTER TABLE [dbo].[Ticket] CHECK CONSTRAINT [FK_Ticket_TicketPriority]
+GO
+ALTER TABLE [dbo].[Ticket]  WITH CHECK ADD  CONSTRAINT [FK_Ticket_TicketStatus] FOREIGN KEY([Ent_Key], [Tst_Status])
+REFERENCES [dbo].[TicketStatus] ([Ent_Key], [Tst_Key])
+GO
+ALTER TABLE [dbo].[Ticket] CHECK CONSTRAINT [FK_Ticket_TicketStatus]
+GO
+ALTER TABLE [dbo].[Ticket]  WITH CHECK ADD  CONSTRAINT [FK_Ticket_TicketType] FOREIGN KEY([Ent_Key], [Ttp_Key])
+REFERENCES [dbo].[TicketType] ([Ent_Key], [Ttp_Key])
+GO
+ALTER TABLE [dbo].[Ticket] CHECK CONSTRAINT [FK_Ticket_TicketType]
+GO
+ALTER TABLE [dbo].[TicketComment]  WITH CHECK ADD  CONSTRAINT [FK_TicketComment_Ticket] FOREIGN KEY([Ent_Key], [Tck_Key])
+REFERENCES [dbo].[Ticket] ([Ent_Key], [Tck_Key])
+GO
+ALTER TABLE [dbo].[TicketComment] CHECK CONSTRAINT [FK_TicketComment_Ticket]
+GO
+ALTER TABLE [dbo].[TicketFile]  WITH CHECK ADD  CONSTRAINT [FK_TicketFile_Ticket] FOREIGN KEY([Ent_Key], [Tck_Key])
+REFERENCES [dbo].[Ticket] ([Ent_Key], [Tck_Key])
+GO
+ALTER TABLE [dbo].[TicketFile] CHECK CONSTRAINT [FK_TicketFile_Ticket]
+GO
+ALTER TABLE [dbo].[TicketPriority]  WITH CHECK ADD  CONSTRAINT [FK_TicketPriority_Entity] FOREIGN KEY([EntKey])
+REFERENCES [dbo].[Entity] ([Ent_Key])
+GO
+ALTER TABLE [dbo].[TicketPriority] CHECK CONSTRAINT [FK_TicketPriority_Entity]
+GO
+ALTER TABLE [dbo].[TicketStatus]  WITH CHECK ADD  CONSTRAINT [FK_TicketStatus_Entity] FOREIGN KEY([Ent_Key])
+REFERENCES [dbo].[Entity] ([Ent_Key])
+GO
+ALTER TABLE [dbo].[TicketStatus] CHECK CONSTRAINT [FK_TicketStatus_Entity]
+GO
+ALTER TABLE [dbo].[TicketType]  WITH CHECK ADD  CONSTRAINT [FK_TicketType_Entity] FOREIGN KEY([Ent_Key])
+REFERENCES [dbo].[Entity] ([Ent_Key])
+GO
+ALTER TABLE [dbo].[TicketType] CHECK CONSTRAINT [FK_TicketType_Entity]
+GO
+USE [master]
+GO
+ALTER DATABASE [torq] SET  READ_WRITE 
+GO
+
+
+
+USE torq
+GO
+
+INSERT INTO Entity 
+(
+Ent_DateRegistered,
+Ent_TrialExpires,
+Ent_Name,
+Ent_Status,
+Ent_Health,
+Ent_Url,
+Ent_Identifier,
+Ent_Logo,
+Ent_FinMonth,
+Ent_FinDayType,
+Ent_FinDay,
+Ent_Longitude,
+Ent_Latitude
+)
+VALUES
+(
+    GETDATE(),
+    CAST('2025-12-31' AS DATE),
+    'Grandmark',
+    1,
+    1,
+    'http://www.grandmark.co.za',
+    NULL,
+    NULL,
+    1,
+    1,
+    20,
+    NULL,
+    NULL
+)  
+
+
+INSERT INTO SysUser
+(
+    Ent_Key,
+    Usr_ParentEnt,
+    Usr_ParentKey,
+    Usr_UserID,
+    Usr_Password,
+    Usr_Admin,
+    Usr_AutoAuthorize,
+    Usr_CanAuthorize,
+    Usr_Name,
+    Usr_Surname,
+    Usr_Email,
+    Usr_Identifier,
+    Usr_Mobile,
+    Usr_Phone,
+    Usr_Extension,
+    Usr_Fax,
+    Usr_Avatar,
+    Usr_Status,
+    Usr_StatusDate,
+    Usr_Token,
+    Usr_TokenDate
+)
+VALUES (1, NULL, NULL, 'eugenec@grandmark.co.za', '1Password!', 'Y', 'Y', 'Y', 'Eugene', 'Classen', 'eugenec@grandmark.co.za', NULL, NULL, NULL, NULL, NULL, NULL, 1, GETDATE(), NULL, NULL),
+	   (1, NULL, NULL, 'lulamay@grandmark.co.za', '1Password!', 'Y', 'Y', 'Y', 'Lulama', 'Yane', 'lulamay@grandmark.co.za', NULL, NULL, NULL, NULL, NULL, NULL, 1, GETDATE(), NULL, NULL),
+	   (1, NULL, NULL, 'franckol@grandmark.co.za', '1Password!', 'Y', 'Y', 'Y', 'Francko', 'Lampbrecht', 'franckol@grandmark.co.za', NULL, NULL, NULL, NULL, NULL, NULL, 1, GETDATE(), NULL, NULL),
+	   (1, NULL, NULL, 'leons@grandmark.co.za', '1Password!', 'Y', 'Y', 'Y', 'Leon', 'Smith', 'leons@grandmark.co.za', NULL, NULL, NULL, NULL, NULL, NULL, 1, GETDATE(), NULL, NULL),
+	   (1, NULL, NULL, 'vinaym@grandmark.co.za', '1Password!', 'Y', 'Y', 'Y', 'Vinay', 'Morar', 'vinaym@grandmark.co.za', NULL, NULL, NULL, NULL, NULL, NULL, 1, GETDATE(), NULL, NULL)

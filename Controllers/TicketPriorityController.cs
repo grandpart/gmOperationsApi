@@ -131,15 +131,15 @@ namespace Grandmark
         public string Delete(int tprKey, [FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
-            TicketPriorityKey vTicketPriorityKey = new();
-            vTicketPriorityKey.EntKey = vLogonToken.Entity;
-            vTicketPriorityKey.TprKey = tprKey;
+            TicketPriority vTicketPriority = new();
+            vTicketPriority.EntKey = vLogonToken.Entity;
+            vTicketPriority.TprKey = tprKey;
             try
             {
-                UserBridge.Invoke(TicketPriorityBusiness.Delete, vTicketPriorityKey, vLogonToken, aConnection);
+                UserBridge.Invoke(TicketPriorityBusiness.Delete, vTicketPriority, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, vTicketPriorityKey.SerializeToJson());
+                return Utils.StatusJson(null, vTicketPriority.SerializeToJson());
             }
             catch (TransactionStatusException tx)
             {
