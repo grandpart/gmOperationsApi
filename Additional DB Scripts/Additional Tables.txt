@@ -1,38 +1,54 @@
 ﻿CREATE TABLE Currency
 (
-	Ent_Key INT NOT NULL,
-	Cur_Key INT NOT NULL IDENTITY(1,1),
-	Cur_Code VARCHAR(5) NOT NULL,
-	Cur_Prefix NVARCHAR(1) NOT NULL,
-	Cur_Name NVARCHAR(50) NOT NULL
+	EntKey INT NOT NULL,
+	CurKey INT NOT NULL IDENTITY(1,1),
+	CurCode VARCHAR(5) NOT NULL,
+	CurPrefix NVARCHAR(1) NOT NULL,
+	CurName NVARCHAR(50) NOT NULL
 )
 GO
-ALTER TABLE Currency ADD CONSTRAINT pk_Currency PRIMARY KEY (Ent_key,Cur_Key)
+ALTER TABLE Currency ADD CONSTRAINT pk_Currency PRIMARY KEY (EntKey,CurKey)
 GO
-
-----------------------------------------------------------------------------------------------------------------------------
-
-CREATE TABLE Branch
-(
-	Ent_Key int NOT NULL,
-	Brh_Key INT IDENTITY(1,1) NOT NULL,
-	Brh_Name NVARCHAR(255) NOT NULL,
-	Brh_Code NVARCHAR(10) NOT NULL,
-)
+ALTER TABLE Currency ADD CONSTRAINT fk_Currency_Entity FOREIGN KEY (EntKey)
+REFERENCES Entity (Ent_Key)
 GO
-ALTER TABLE Branch ADD CONSTRAINT pk_Branch PRIMARY KEY (Ent_Key, Brh_Key)
+ALTER TABLE Currency ADD CONSTRAINT uq_Currency_CurKey UNIQUE (CurKey)
 GO
 
 ----------------------------------------------------------------------------------------------------------------------------
 
 CREATE TABLE Warehouse
 (
-	Ent_Key INT NOT NULL,
-	Whs_Key INT IDENTITY(1,1) NOT NULL,
-	Whs_Name NVARCHAR(510) NOT NULL,
-	Whs_Code NVARCHAR(10) NOT NULL,
-	Whs_IsTradingWarehouse bit NOT NULL,
+	EntKey INT NOT NULL,
+	WhsKey INT IDENTITY(1,1) NOT NULL,
+	WhsName NVARCHAR(510) NOT NULL,
+	WhsCode NVARCHAR(10) NOT NULL,
+	WhsIsTradingWarehouse bit NOT NULL,
 )
 GO
-ALTER TABLE Warehouse ADD CONSTRAINT pk_Warehouse PRIMARY KEY (Ent_Key, Whs_Key)
+ALTER TABLE Warehouse ADD CONSTRAINT pk_Warehouse PRIMARY KEY (EntKey, WhsKey)
+GO
+ALTER TABLE Warehouse ADD CONSTRAINT fk_Warehouse_Entity FOREIGN KEY (EntKey)
+REFERENCES Entity (Ent_Key)
+GO
+
+----------------------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE ExchangeRate
+(
+	EntKey INT NOT NULL,
+	ExrKey INT NOT NULL IDENTITY(1,1),
+	CurKey INT NOT NULL,
+	ExrFinYear INT NOT NULL,
+	ExrFinMonth INT NOT NULL,
+	ExrRate DECIMAL(12,4) NOT NULL
+)
+GO
+ALTER TABLE ExchangeRate ADD CONSTRAINT pk_ExchangeRate PRIMARY KEY (EntKey, ExrKey, CurKey)
+GO
+ALTER TABLE ExchangeRate ADD CONSTRAINT fk_ExchangeRate_Entity FOREIGN KEY (EntKey)
+REFERENCES Entity (Ent_Key)
+GO
+ALTER TABLE ExchangeRate ADD CONSTRAINT fk_ExchangeRate_Currency FOREIGN KEY (CurKey)
+REFERENCES Currency (CurKey)
 GO

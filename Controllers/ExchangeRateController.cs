@@ -1,33 +1,32 @@
-﻿using Grandmark;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zephry;
 
-namespace gmOperationsApi.Controllers
+namespace Grandmark
 {
-    
     [ApiController]
-    public class CurrencyController : ControllerBase
+    public class ExchangeRateController : ControllerBase
     {
+
         #region Get Specific - GET
 
-        [Route("currency/{curKey}")]
+        [Route("exchangerate/{exrKey}")]
         [HttpGet]
-        public string Load(int curKey, [FromServices] Connection aConnection)
+        public string Load(int exrKey, [FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
 
             try
             {
-                var vCurrency = new Currency
+                var vExchangeRate = new ExchangeRate
                 {
                     EntKey = vLogonToken.Entity,
-                    CurKey = curKey
+                    ExrKey = exrKey
                 };
-                UserBridge.Invoke(CurrencyBusiness.Load, vCurrency, vLogonToken, aConnection);
+                UserBridge.Invoke(ExchangeRateBusiness.Load, vExchangeRate, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, vCurrency.SerializeToJson());
+                return Utils.StatusJson(null, vExchangeRate.SerializeToJson());
             }
             catch (TransactionStatusException tx)
             {
@@ -45,19 +44,18 @@ namespace gmOperationsApi.Controllers
 
         #region Read List - GET
 
-        [Route("currency")]
+        [Route("exchangerate")]
         [HttpGet]
         public string LoadList([FromServices] Connection aConnection)
         {
-            
+            var vLogonToken = Utils.GetLogonToken(HttpContext);
             try
             {
-                var vLogonToken = Utils.GetLogonToken(HttpContext);
-                var vCurrencyList = new CurrencyCollection();
-                UserBridge.Invoke(CurrencyBusiness.LoadList, vCurrencyList, vLogonToken, aConnection);
+                var vExchangeRateList = new ExchangeRateCollection();
+                UserBridge.Invoke(ExchangeRateBusiness.LoadList, vExchangeRateList, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, vCurrencyList.SerializeToJson());
+                return Utils.StatusJson(null, vExchangeRateList.SerializeToJson());
             }
             catch (TransactionStatusException tx)
             {
@@ -74,18 +72,18 @@ namespace gmOperationsApi.Controllers
         #endregion
 
         #region Create - POST
-        [Route("currency")]
+        [Route("exchangerate")]
         [HttpPost]
-        public string Create([FromBody] Currency aCurrency, [FromServices] Connection aConnection)
+        public string Create([FromBody] ExchangeRate aExchangeRate, [FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
-            aCurrency.EntKey = vLogonToken.Entity;
+            aExchangeRate.EntKey = vLogonToken.Entity;
             try
             {
-                UserBridge.Invoke(CurrencyBusiness.Insert, aCurrency, vLogonToken, aConnection);
+                UserBridge.Invoke(ExchangeRateBusiness.Insert, aExchangeRate, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, aCurrency.SerializeToJson());
+                return Utils.StatusJson(null, aExchangeRate.SerializeToJson());
             }
             catch (TransactionStatusException tx)
             {
@@ -101,19 +99,19 @@ namespace gmOperationsApi.Controllers
         #endregion
 
         #region Update - PUT
-        [Route("currency/{curKey}")]
+        [Route("exchangerate/{exrKey}")]
         [HttpPut]
-        public string Update(int curKey, [FromBody] Currency aCurrency, [FromServices] Connection aConnection)
+        public string Update(int exrKey, [FromBody] ExchangeRate aExchangeRate, [FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
-            aCurrency.EntKey = vLogonToken.Entity;
-            aCurrency.CurKey = curKey;
+            aExchangeRate.EntKey = vLogonToken.Entity;
+            aExchangeRate.ExrKey = exrKey;
             try
             {
-                UserBridge.Invoke(CurrencyBusiness.Update, aCurrency, vLogonToken, aConnection);
+                UserBridge.Invoke(ExchangeRateBusiness.Update, aExchangeRate, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, aCurrency.SerializeToJson());
+                return Utils.StatusJson(null, aExchangeRate.SerializeToJson());
             }
             catch (TransactionStatusException tx)
             {
@@ -129,20 +127,20 @@ namespace gmOperationsApi.Controllers
         #endregion
 
         #region Delete - DELETE
-        [Route("currency/{curKey}")]
+        [Route("exchangerate/{exrKey}")]
         [HttpDelete]
-        public string Delete(int curKey, [FromServices] Connection aConnection)
+        public string Delete(int exrKey, [FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
-            Currency vCurrency = new();
-            vCurrency.EntKey = vLogonToken.Entity;
-            vCurrency.CurKey = curKey;
+            ExchangeRate vExchangeRate = new();
+            vExchangeRate.EntKey = vLogonToken.Entity;
+            vExchangeRate.ExrKey = exrKey;
             try
             {
-                UserBridge.Invoke(CurrencyBusiness.Delete, vCurrency, vLogonToken, aConnection);
+                UserBridge.Invoke(ExchangeRateBusiness.Delete, vExchangeRate, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, vCurrency.SerializeToJson());
+                return Utils.StatusJson(null, vExchangeRate.SerializeToJson());
             }
             catch (TransactionStatusException tx)
             {
