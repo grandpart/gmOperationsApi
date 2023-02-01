@@ -55,7 +55,7 @@ GO
 
 ----------------------------------------------------------------------------------------------------------------------------
 
---Keeps departments within entity. (Branch Manager, Finance, Warehouse, Product Specialist, Stock Controller etc..)
+--Keeps departments within entity. (Finance, Warehouse, Stock etc..)
 CREATE TABLE Department
 (
 	EntKey INT NOT NULL,
