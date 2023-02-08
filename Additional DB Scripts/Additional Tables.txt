@@ -52,3 +52,20 @@ GO
 ALTER TABLE ExchangeRate ADD CONSTRAINT fk_ExchangeRate_Currency FOREIGN KEY (CurKey)
 REFERENCES Currency (CurKey)
 GO
+
+----------------------------------------------------------------------------------------------------------------------------
+
+--Keeps departments within entity. (Finance, Warehouse, Stock etc..)
+CREATE TABLE Department
+(
+	EntKey INT NOT NULL,
+	DepKey INT NOT NULL IDENTITY(1,1),
+	DepName NVARCHAR(255) NOT NULL
+)
+GO
+ALTER TABLE Department ADD CONSTRAINT pk_Department PRIMARY KEY (EntKey, DepKey)
+GO
+ALTER TABLE Department ADD CONSTRAINT fk_Department_Entity FOREIGN KEY (EntKey)
+REFERENCES Entity (Ent_Key)
+GO
+

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zephry;
 
-namespace gmOperationsApi.Controllers
+namespace Grandmark
 {
     
     [ApiController]
