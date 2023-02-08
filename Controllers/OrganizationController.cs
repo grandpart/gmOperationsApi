@@ -24,17 +24,17 @@ namespace Grandmark
                 UserBridge.Invoke(OrganizationBusiness.Load, vOrganization, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, vOrganization.SerializeToJson());
+                return vOrganization.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), string.Empty);
+                Response.StatusCode = tx.HttpCode;
+                return tx.getTransactionStatus().SerializeToJson();
             }
             catch (Exception ex)
             {
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), string.Empty);
+                return new TransactionStatus(StatusCodes.Status500InternalServerError, "Unexpected Server Error", ex.Message).SerializeToJson();
             }
         }
         #endregion
@@ -51,26 +51,18 @@ namespace Grandmark
                 UserBridge.Invoke(OrganizationProxyBusiness.Load, vOrganizationProxyList, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                var vJson = Utils.StatusJson(null, vOrganizationProxyList.SerializeToJson());
-                return Utils.StatusJson(null, vOrganizationProxyList.SerializeToJson());
+                var vJson = vOrganizationProxyList.SerializeToJson();
+                return vOrganizationProxyList.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
-                switch (tx.TransactionResult)
-                {
-                    case TransactionResult.Access:
-                        Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        break;
-                    default:
-                        Response.StatusCode = StatusCodes.Status500InternalServerError;
-                        break;
-                }
-                return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), string.Empty);
+                Response.StatusCode = tx.HttpCode;
+                return tx.getTransactionStatus().SerializeToJson();
             }
             catch (Exception ex)
             {
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), string.Empty);
+                return new TransactionStatus(StatusCodes.Status500InternalServerError, "Unexpected Server Error", ex.Message).SerializeToJson();
             }
         }
         #endregion
@@ -87,25 +79,17 @@ namespace Grandmark
                 UserBridge.Invoke(OrganizationBusiness.Insert, aOrganization, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, aOrganization.SerializeToJson());
+                return aOrganization.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
-                switch (tx.TransactionResult)
-                {
-                    case TransactionResult.Access:
-                        Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        break;
-                    default:
-                        Response.StatusCode = StatusCodes.Status500InternalServerError;
-                        break;
-                }
-                return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), string.Empty);
+                Response.StatusCode = tx.HttpCode;
+                return tx.getTransactionStatus().SerializeToJson();
             }
             catch (Exception ex)
             {
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), string.Empty);
+                return new TransactionStatus(StatusCodes.Status500InternalServerError, "Unexpected Server Error", ex.Message).SerializeToJson();
             }
         }
         #endregion
@@ -123,17 +107,17 @@ namespace Grandmark
                 UserBridge.Invoke(OrganizationBusiness.Update, aOrganization, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, aOrganization.SerializeToJson());
+                return aOrganization.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), string.Empty);
+                Response.StatusCode = tx.HttpCode;
+                return tx.getTransactionStatus().SerializeToJson();
             }
             catch (Exception ex)
             {
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), string.Empty);
+                return new TransactionStatus(StatusCodes.Status500InternalServerError, "Unexpected Server Error", ex.Message).SerializeToJson();
             }
         }
         #endregion
@@ -152,17 +136,17 @@ namespace Grandmark
                 UserBridge.Invoke(OrganizationBusiness.Delete, vOrganizationKey, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, vOrganizationKey.SerializeToJson());
+                return vOrganizationKey.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), string.Empty);
+                Response.StatusCode = tx.HttpCode;
+                return tx.getTransactionStatus().SerializeToJson();
             }
             catch (Exception ex)
             {
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), string.Empty);
+                return new TransactionStatus(StatusCodes.Status500InternalServerError, "Unexpected Server Error", ex.Message).SerializeToJson();
             }
         }
         #endregion

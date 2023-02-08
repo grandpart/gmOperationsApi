@@ -27,17 +27,17 @@ namespace Grandmark
                 // Return success;
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, new TransactionStatus(TransactionResult.Ok, "Authenticated").SerializeToJson());
+                return new TransactionStatus(200, "Authenticated", "Your logon credentials have been authenticated").SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), string.Empty);
+                Response.StatusCode = tx.HttpCode;
+                return tx.getTransactionStatus().SerializeToJson();
             }
             catch (Exception ex)
             {
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), string.Empty);
+                return new TransactionStatus(StatusCodes.Status500InternalServerError, "Unexpected Server Error", ex.Message).SerializeToJson();
             }
         }
 

@@ -1,33 +1,31 @@
-﻿using Grandmark;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Zephry;
 
-namespace gmOperationsApi.Controllers
+namespace Grandmark
 {
-    
     [ApiController]
-    public class CurrencyController : ControllerBase
+    public class TicketController : Controller
     {
+
         #region Get Specific - GET
 
-        [Route("currency/{curKey}")]
+        [Route("ticket/{tckKey}")]
         [HttpGet]
-        public string Load(int curKey, [FromServices] Connection aConnection)
+        public string Load(int tckKey, [FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
 
             try
             {
-                var vCurrency = new Currency
+                var vTicket = new Ticket
                 {
                     EntKey = vLogonToken.Entity,
-                    CurKey = curKey
+                    TtpKey = tckKey
                 };
-                UserBridge.Invoke(CurrencyBusiness.Load, vCurrency, vLogonToken, aConnection);
+                UserBridge.Invoke(TicketBusiness.Load, vTicket, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return vCurrency.SerializeToJson();
+                return vTicket.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
@@ -45,19 +43,17 @@ namespace gmOperationsApi.Controllers
 
         #region Read List - GET
 
-        [Route("currency")]
+        [Route("ticket")]
         [HttpGet]
         public string LoadList([FromServices] Connection aConnection)
         {
-            
+            var vLogonToken = Utils.GetLogonToken(HttpContext);
             try
             {
-                var vLogonToken = Utils.GetLogonToken(HttpContext);
-                var vCurrencyList = new CurrencyCollection();
-                UserBridge.Invoke(CurrencyBusiness.LoadList, vCurrencyList, vLogonToken, aConnection);
+                var vTicketCollection = new TicketCollection();
+                UserBridge.Invoke(TicketBusiness.Load, vTicketCollection, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
-                // NB, change this to a pure success message, no return
-                return vCurrencyList.SerializeToJson();
+                return vTicketCollection.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
@@ -74,18 +70,18 @@ namespace gmOperationsApi.Controllers
         #endregion
 
         #region Create - POST
-        [Route("currency")]
+        [Route("ticket")]
         [HttpPost]
-        public string Create([FromBody] Currency aCurrency, [FromServices] Connection aConnection)
+        public string Create([FromBody] Ticket aTicket, [FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
-            aCurrency.EntKey = vLogonToken.Entity;
+            aTicket.EntKey = vLogonToken.Entity;
             try
             {
-                UserBridge.Invoke(CurrencyBusiness.Insert, aCurrency, vLogonToken, aConnection);
+                UserBridge.Invoke(TicketBusiness.Insert, aTicket, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return aCurrency.SerializeToJson();
+                return aTicket.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
@@ -101,19 +97,18 @@ namespace gmOperationsApi.Controllers
         #endregion
 
         #region Update - PUT
-        [Route("currency/{curKey}")]
+        [Route("ticket/{tckKey}")]
         [HttpPut]
-        public string Update(int curKey, [FromBody] Currency aCurrency, [FromServices] Connection aConnection)
+        public string Update(int tckKey, [FromBody] Ticket aTicket, [FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
-            aCurrency.EntKey = vLogonToken.Entity;
-            aCurrency.CurKey = curKey;
+            aTicket.EntKey = vLogonToken.Entity;
+            aTicket.TckKey = tckKey;
             try
             {
-                UserBridge.Invoke(CurrencyBusiness.Update, aCurrency, vLogonToken, aConnection);
+                UserBridge.Invoke(TicketBusiness.Update, aTicket, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
-                // NB, change this to a pure success message, no return
-                return aCurrency.SerializeToJson();
+                return aTicket.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
@@ -129,20 +124,20 @@ namespace gmOperationsApi.Controllers
         #endregion
 
         #region Delete - DELETE
-        [Route("currency/{curKey}")]
+        [Route("ticket/{tckKey}")]
         [HttpDelete]
-        public string Delete(int curKey, [FromServices] Connection aConnection)
+        public string Delete(int tckKey, [FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
-            Currency vCurrency = new();
-            vCurrency.EntKey = vLogonToken.Entity;
-            vCurrency.CurKey = curKey;
+            Ticket vTicket = new();
+            vTicket.EntKey = vLogonToken.Entity;
+            vTicket.TtpKey = tckKey;
             try
             {
-                UserBridge.Invoke(CurrencyBusiness.Delete, vCurrency, vLogonToken, aConnection);
+                UserBridge.Invoke(TicketBusiness.Delete, vTicket, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return vCurrency.SerializeToJson();
+                return vTicket.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {

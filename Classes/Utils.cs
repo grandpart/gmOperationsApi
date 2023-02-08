@@ -26,7 +26,6 @@ namespace Grandmark
             cookieOptions.Path = "/";
             cookieOptions.IsEssential = true;
             Response.Cookies.Append(TokenDescriptor, protectedText, cookieOptions);
-
         }
 
         public static LogonToken GetLogonToken(HttpContext aHttpContext)
@@ -43,28 +42,28 @@ namespace Grandmark
             return vLogonToken;
         }
 
-        public static string StatusJson(TransactionStatus? aTransactionStatus, string aObjectJson)
-        {
-            var vTransactionStatus = new TransactionStatus();
-            if (aTransactionStatus == null)
-            {
-                vTransactionStatus.TransactionResult = TransactionResult.Ok;
-                vTransactionStatus.Message = "Success";
-            }
-            else
-            {
-                vTransactionStatus.AssignFromSource(aTransactionStatus);
-            }
-            var vStringBuilder = new StringBuilder();
-            vStringBuilder.Append('{');
-            vStringBuilder.AppendFormat("{0}:{1}", "\"status\"", vTransactionStatus.SerializeToJson());
-            if (!string.IsNullOrWhiteSpace(aObjectJson))
-            {
-                vStringBuilder.AppendFormat(",{0}:{1}", "\"data\"", aObjectJson);
-            }
-            vStringBuilder.Append('}');
-            return vStringBuilder.ToString();
-        }
+        //public static string StatusJson(TransactionStatus? aTransactionStatus, string aObjectJson)
+        //{
+        //    var vTransactionStatus = new TransactionStatus();
+        //    if (aTransactionStatus == null)
+        //    {
+        //        vTransactionStatus.TransactionResult = TransactionResult.Ok;
+        //        vTransactionStatus.Message = "Success";
+        //    }
+        //    else
+        //    {
+        //        vTransactionStatus.AssignFromSource(aTransactionStatus);
+        //    }
+        //    var vStringBuilder = new StringBuilder();
+        //    vStringBuilder.Append('{');
+        //    vStringBuilder.AppendFormat("{0}:{1}", "\"status\"", vTransactionStatus.SerializeToJson());
+        //    if (!string.IsNullOrWhiteSpace(aObjectJson))
+        //    {
+        //        vStringBuilder.AppendFormat(",{0}:{1}", "\"data\"", aObjectJson);
+        //    }
+        //    vStringBuilder.Append('}');
+        //    return vStringBuilder.ToString();
+        //}
     }
 }
 

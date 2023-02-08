@@ -9,7 +9,7 @@ namespace Grandmark
 
         #region Get Specific - GET
 
-        [Route("ticketpriority/{tprKey}")]
+        [Route("ticket/priority/{tprKey}")]
         [HttpGet]
         public string Load(int tprKey, [FromServices] Connection aConnection)
         {
@@ -24,18 +24,17 @@ namespace Grandmark
                 };
                 UserBridge.Invoke(TicketPriorityBusiness.Load, vTicketPriority, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
-                // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, vTicketPriority.SerializeToJson());
+                return vTicketPriority.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), string.Empty);
+                Response.StatusCode = tx.HttpCode;
+                return tx.getTransactionStatus().SerializeToJson();
             }
             catch (Exception ex)
             {
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), string.Empty);
+                return new TransactionStatus(StatusCodes.Status500InternalServerError, "Unexpected Server Error", ex.Message).SerializeToJson();
             }
         }
 
@@ -43,35 +42,34 @@ namespace Grandmark
 
         #region Read List - GET
 
-        [Route("ticketpriority")]
+        [Route("ticket/priority")]
         [HttpGet]
         public string LoadList([FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
             try
             {
-                var vTicketPriorityList = new TicketPriorityCollection();
-                UserBridge.Invoke(TicketPriorityBusiness.LoadList, vTicketPriorityList, vLogonToken, aConnection);
+                var vTicketPriorityCollection = new TicketPriorityCollection();
+                UserBridge.Invoke(TicketPriorityBusiness.Load, vTicketPriorityCollection, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
-                // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, vTicketPriorityList.SerializeToJson());
+                return vTicketPriorityCollection.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), string.Empty);
+                Response.StatusCode = tx.HttpCode;
+                return tx.getTransactionStatus().SerializeToJson();
             }
             catch (Exception ex)
             {
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), string.Empty);
+                return new TransactionStatus(StatusCodes.Status500InternalServerError, "Unexpected Server Error", ex.Message).SerializeToJson();
             }
         }
 
         #endregion
 
         #region Create - POST
-        [Route("ticketpriority")]
+        [Route("ticket/priority")]
         [HttpPost]
         public string Create([FromBody] TicketPriority aTicketPriority, [FromServices] Connection aConnection)
         {
@@ -81,24 +79,23 @@ namespace Grandmark
             {
                 UserBridge.Invoke(TicketPriorityBusiness.Insert, aTicketPriority, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
-                // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, aTicketPriority.SerializeToJson());
+                return aTicketPriority.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), string.Empty);
+                Response.StatusCode = tx.HttpCode;
+                return tx.getTransactionStatus().SerializeToJson();
             }
             catch (Exception ex)
             {
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), string.Empty);
+                return new TransactionStatus(StatusCodes.Status500InternalServerError, "Unexpected Server Error", ex.Message).SerializeToJson();
             }
         }
         #endregion
 
         #region Update - PUT
-        [Route("ticketpriority/{tprKey}")]
+        [Route("ticket/priority/{tprKey}")]
         [HttpPut]
         public string Update(int tprKey, [FromBody] TicketPriority aTicketPriority, [FromServices] Connection aConnection)
         {
@@ -109,24 +106,23 @@ namespace Grandmark
             {
                 UserBridge.Invoke(TicketPriorityBusiness.Update, aTicketPriority, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
-                // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, aTicketPriority.SerializeToJson());
+                return aTicketPriority.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), string.Empty);
+                Response.StatusCode = tx.HttpCode;
+                return tx.getTransactionStatus().SerializeToJson();
             }
             catch (Exception ex)
             {
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), string.Empty);
+                return new TransactionStatus(StatusCodes.Status500InternalServerError, "Unexpected Server Error", ex.Message).SerializeToJson();
             }
         }
         #endregion
 
         #region Delete - DELETE
-        [Route("ticketpriority/{tprKey}")]
+        [Route("ticket/priority/{tprKey}")]
         [HttpDelete]
         public string Delete(int tprKey, [FromServices] Connection aConnection)
         {
@@ -138,18 +134,17 @@ namespace Grandmark
             {
                 UserBridge.Invoke(TicketPriorityBusiness.Delete, vTicketPriority, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
-                // NB, change this to a pure success message, no return
-                return Utils.StatusJson(null, vTicketPriority.SerializeToJson());
+                return vTicketPriority.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Utils.StatusJson(new TransactionStatus(tx.TransactionResult, tx.Message), string.Empty);
+                Response.StatusCode = tx.HttpCode;
+                return tx.getTransactionStatus().SerializeToJson();
             }
             catch (Exception ex)
             {
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return Utils.StatusJson(new TransactionStatus(TransactionResult.General, ex.Message), string.Empty);
+                return new TransactionStatus(StatusCodes.Status500InternalServerError, "Unexpected Server Error", ex.Message).SerializeToJson();
             }
         }
         #endregion
