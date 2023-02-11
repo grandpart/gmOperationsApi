@@ -20,7 +20,7 @@ namespace Grandmark
                 var vDepartment = new Department
                 {
                     EntKey = vLogonToken.Entity,
-                    DepKey = depKey
+                    DptKey = depKey
                 };
                 UserBridge.Invoke(DepartmentBusiness.Load, vDepartment, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
@@ -104,7 +104,7 @@ namespace Grandmark
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
             aDepartment.EntKey = vLogonToken.Entity;
-            aDepartment.DepKey = depKey;
+            aDepartment.DptKey = depKey;
             try
             {
                 UserBridge.Invoke(DepartmentBusiness.Update, aDepartment, vLogonToken, aConnection);
@@ -133,7 +133,7 @@ namespace Grandmark
             var vLogonToken = Utils.GetLogonToken(HttpContext);
             Department vDepartment = new();
             vDepartment.EntKey = vLogonToken.Entity;
-            vDepartment.DepKey = depkey;
+            vDepartment.DptKey = depkey;
             try
             {
                 UserBridge.Invoke(DepartmentBusiness.Delete, vDepartment, vLogonToken, aConnection);
