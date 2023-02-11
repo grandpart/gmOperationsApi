@@ -2,7 +2,6 @@
 using System.Text;
 using Microsoft.AspNetCore.DataProtection;
 using Zephry;
-using static System.Net.WebRequestMethods;
 
 namespace Grandmark
 {
@@ -41,29 +40,6 @@ namespace Grandmark
             var vLogonToken = cookieValue.DeserializeFromJson<LogonToken>();
             return vLogonToken;
         }
-
-        //public static string StatusJson(TransactionStatus? aTransactionStatus, string aObjectJson)
-        //{
-        //    var vTransactionStatus = new TransactionStatus();
-        //    if (aTransactionStatus == null)
-        //    {
-        //        vTransactionStatus.TransactionResult = TransactionResult.Ok;
-        //        vTransactionStatus.Message = "Success";
-        //    }
-        //    else
-        //    {
-        //        vTransactionStatus.AssignFromSource(aTransactionStatus);
-        //    }
-        //    var vStringBuilder = new StringBuilder();
-        //    vStringBuilder.Append('{');
-        //    vStringBuilder.AppendFormat("{0}:{1}", "\"status\"", vTransactionStatus.SerializeToJson());
-        //    if (!string.IsNullOrWhiteSpace(aObjectJson))
-        //    {
-        //        vStringBuilder.AppendFormat(",{0}:{1}", "\"data\"", aObjectJson);
-        //    }
-        //    vStringBuilder.Append('}');
-        //    return vStringBuilder.ToString();
-        //}
     }
 }
 

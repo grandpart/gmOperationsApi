@@ -7,24 +7,25 @@ using Zephry;
 namespace Grandmark
 {
     [ApiController]
-    public class OrganizationController : ControllerBase
+    public class UserController : ControllerBase
     {
         #region Read specific - GET
-        [Route("organization/{orgKey}")]
+        [Route("user/{usrKey}")]
         [HttpGet]
-        public string Load(int orgKey, [FromServices] Connection aConnection)
+        public string Load(int usrKey, [FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
             try
             {
-                var vOrganization = new Organization {
+                var vUser = new User
+                {
                     EntKey = vLogonToken.Entity,
-                    OrgKey = orgKey
+                    UsrKey = usrKey
                 };
-                UserBridge.Invoke(OrganizationBusiness.Load, vOrganization, vLogonToken, aConnection);
+                UserBridge.Invoke(UserBusiness.Load, vUser, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return vOrganization.SerializeToJson();
+                return vUser.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
@@ -40,19 +41,19 @@ namespace Grandmark
         #endregion
 
         #region Read list - GET 
-        [Route("organization")]
+        [Route("user")]
         [HttpGet]
         public string Load([FromServices] Connection aConnection)
         {
             try
             {
                 var vLogonToken = Utils.GetLogonToken(HttpContext);
-                var vOrganizationProxyList = new OrganizationProxyCollection();
-                UserBridge.Invoke(OrganizationProxyBusiness.Load, vOrganizationProxyList, vLogonToken, aConnection);
+                var vUserProxyList = new UserProxyCollection();
+                UserBridge.Invoke(UserProxyBusiness.Load, vUserProxyList, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                var vJson = vOrganizationProxyList.SerializeToJson();
-                return vOrganizationProxyList.SerializeToJson();
+                var vJson = vUserProxyList.SerializeToJson();
+                return vUserProxyList.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
@@ -68,18 +69,18 @@ namespace Grandmark
         #endregion
 
         #region Create - POST
-        [Route("organization")]
+        [Route("user")]
         [HttpPost]
-        public string Create([FromBody] Organization aOrganization, [FromServices] Connection aConnection)
+        public string Create([FromBody] User aUser, [FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
-            aOrganization.EntKey = vLogonToken.Entity;
+            aUser.EntKey = vLogonToken.Entity;
             try
             {
-                UserBridge.Invoke(OrganizationBusiness.Insert, aOrganization, vLogonToken, aConnection);
+                UserBridge.Invoke(UserBusiness.Insert, aUser, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return aOrganization.SerializeToJson();
+                return aUser.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
@@ -95,19 +96,19 @@ namespace Grandmark
         #endregion
 
         #region Update - PUT
-        [Route("organization/{orgkey}")]
+        [Route("user/{usrkey}")]
         [HttpPut]
-        public string Update(int orgKey, [FromBody] Organization aOrganization, [FromServices] Connection aConnection)
+        public string Update(int usrKey, [FromBody] User aUser, [FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
-            aOrganization.EntKey = vLogonToken.Entity;
-            aOrganization.OrgKey = orgKey;
+            aUser.EntKey = vLogonToken.Entity;
+            aUser.UsrKey = usrKey;
             try
             {
-                UserBridge.Invoke(OrganizationBusiness.Update, aOrganization, vLogonToken, aConnection);
+                UserBridge.Invoke(UserBusiness.Update, aUser, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return aOrganization.SerializeToJson();
+                return aUser.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
@@ -123,20 +124,20 @@ namespace Grandmark
         #endregion
 
         #region Delete - DELETE
-        [Route("organization/{orgkey}")]
+        [Route("user/{usrkey}")]
         [HttpDelete]
-        public string Delete(int orgKey, [FromServices] Connection aConnection)
+        public string Delete(int usrKey, [FromServices] Connection aConnection)
         {
             var vLogonToken = Utils.GetLogonToken(HttpContext);
-            Organization vOrganization = new();
-            vOrganization.EntKey = vLogonToken.Entity;
-            vOrganization.OrgKey = orgKey;
+            User vUser = new();
+            vUser.EntKey = vLogonToken.Entity;
+            vUser.UsrKey = usrKey;
             try
             {
-                UserBridge.Invoke(OrganizationBusiness.Delete, vOrganization, vLogonToken, aConnection);
+                UserBridge.Invoke(UserBusiness.Delete, vUser, vLogonToken, aConnection);
                 Response.StatusCode = StatusCodes.Status200OK;
                 // NB, change this to a pure success message, no return
-                return vOrganization.SerializeToJson();
+                return vUser.SerializeToJson();
             }
             catch (TransactionStatusException tx)
             {
