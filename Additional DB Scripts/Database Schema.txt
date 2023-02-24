@@ -554,6 +554,52 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_StockDepartment] ON [dbo].[StockDepartment]
 GO
 SET ANSI_PADDING ON
 GO
+
+CREATE TABLE [dbo].[SysGroup](
+    [SgrKey] [int] IDENTITY(1,1) NOT NULL,
+    [SgrSequence] [int] NOT NULL,
+    [SgrName] [nvarchar](255) NOT NULL,
+    [SgrDescription] [nvarchar](1024) NOT NULL,
+CONSTRAINT [PK_SysGroup] PRIMARY KEY CLUSTERED 
+(
+    [SgrKey] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[SysRole](
+    [SrlKey] [int] IDENTITY(1,1) NOT NULL,
+    [SgrKey] [int] NOT NULL,
+    [SrlActive] [char](1) NOT NULL,
+    [SrlAdminRole] [char](1) NOT NULL,
+    [SrlCode] [nvarchar](50) NOT NULL,
+    [SrlImage] [nvarchar](255) NOT NULL,
+    [SrlTitle] [nvarchar](255) NOT NULL,
+    [SrlDescription] [nvarchar](255) NOT NULL,
+    [SrlShort] [nvarchar](255) NOT NULL,
+    [SrlClass] [nvarchar](255) NOT NULL,
+    [SrlAction] [nvarchar](255) NOT NULL,
+    [SrlController] [nvarchar](255) NOT NULL,
+    [SrlSequence] [int] NOT NULL,
+CONSTRAINT [PK_SysRole] PRIMARY KEY CLUSTERED 
+(
+    [SrlKey] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE [dbo].[SysUserRole](
+    [EntKey] [int] NOT NULL,
+    [UsrKey] [int] NOT NULL,
+    [SrlKey] [int] NOT NULL,
+CONSTRAINT [PK_SysUserRole] PRIMARY KEY CLUSTERED 
+(
+    [EntKey] ASC,
+    [UsrKey] ASC,
+    [SrlKey] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
 /****** Object:  Index [IX_UserId]    Script Date: 2023/02/13 22:19:59 ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_UserId] ON [dbo].[SysUser]
 (
@@ -692,6 +738,22 @@ REFERENCES [dbo].[Entity] ([EntKey])
 GO
 ALTER TABLE [dbo].[Warehouse] CHECK CONSTRAINT [fk_Warehouse_Entity]
 GO
+ALTER TABLE [dbo].[SysRole]  WITH CHECK ADD  CONSTRAINT [FK_SysRole_SysGroup] FOREIGN KEY([SgrKey])
+REFERENCES [dbo].[SysGroup] ([SgrKey])
+GO
+ALTER TABLE [dbo].[SysRole] CHECK CONSTRAINT [FK_SysRole_SysGroup]
+GO
+ALTER TABLE [dbo].[SysUserRole]  WITH CHECK ADD  CONSTRAINT [FK_UserRole_SysRole] FOREIGN KEY([SrlKey])
+REFERENCES [dbo].[SysRole] ([SrlKey])
+GO
+ALTER TABLE [dbo].[SysUserRole] CHECK CONSTRAINT [FK_UserRole_SysRole]
+GO
+ALTER TABLE [dbo].[SysUserRole]  WITH CHECK ADD  CONSTRAINT [FK_UserRole_User] FOREIGN KEY([EntKey], [UsrKey])
+REFERENCES [dbo].[SysUser] ([EntKey], [UsrKey])
+GO
+ALTER TABLE [dbo].[SysUserRole] CHECK CONSTRAINT [FK_UserRole_User]
+GO
+
 USE [master]
 GO
 ALTER DATABASE [torq] SET  READ_WRITE 
